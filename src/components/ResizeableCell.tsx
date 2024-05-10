@@ -56,6 +56,7 @@ const ResizableTableCell: React.FC<ResizableTableCellProps> = ({
         position: 'relative',
         padding: '10px',
         border: '1px solid #e0e0e0',
+        backgroundColor: '#fafafa'
       }}
     >
       {children}

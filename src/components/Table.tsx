@@ -121,7 +121,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ data }) => {
                   position: 'sticky',
                   left: 0,
                   zIndex: 100,
-                  backgroundColor: '#fff',
+                  backgroundColor: '#fafafa',
                 }}
               >
                 <Checkbox
@@ -132,7 +132,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ data }) => {
                   onChange={toggleSelectAll}
                 />
               </TableCell>
-              <TableCell />
+              <TableCell style={ {backgroundColor: '#fafafa'}}/>
               <ResizableTableCell
                 width={columnWidths[1]}
                 onResize={(width) => handleResize(1, width)}
@@ -180,7 +180,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ data }) => {
                   position: 'sticky',
                   right: 0,
                   zIndex: 100,
-                  backgroundColor: '#fff',
+                  backgroundColor: '#fafafa',
                 }}
               >
                 <ReplayIcon />
@@ -287,7 +287,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ data }) => {
                           }
                         />
                       </TableCell>
-                      <TableCell />
+                      <TableCell/>
                       <TableCell>{check.type}</TableCell>
                       <TableCell>{check.code}</TableCell>
                       <TableCell>{check.expiration}</TableCell>
