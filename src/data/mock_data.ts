@@ -1,6 +1,5 @@
 import { HealthCheck, Employee } from '../types/types';
 
-// Health Check structure
 export const checksData: HealthCheck[] = [
   {
     id: 'c1',
@@ -157,7 +156,6 @@ export const checksData: HealthCheck[] = [
   // Add more if needed
 ];
 
-// Employee data structure
 export const tableData: Employee[] = [
   {
     id: '1',
@@ -191,8 +189,6 @@ export const tableData: Employee[] = [
     jobTitle: 'Accountant',
     checksIds: ['c10', 'c11', 'c12'],
   },
-  // Continue adding employees similarly
-  // ...
   {
     id: '13',
     name: 'Arthas Menethil',
@@ -209,5 +205,4 @@ export const tableData: Employee[] = [
     jobTitle: 'Accountant',
     checksIds: ['c46', 'c47', 'c48'],
   },
-  // Add more if needed
 ];
