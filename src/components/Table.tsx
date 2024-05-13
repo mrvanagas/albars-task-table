@@ -25,7 +25,7 @@ import { CustomTableProps } from '../types/types';
 import StatusChip from './StatusChip';
 import ResizableTableCell from './ResizeableCell';
 
-const CustomTable: React.FC<CustomTableProps> = ({ data }) => {
+const CustomTable: React.FC<CustomTableProps> = ({ data, checksData }) => {
   const [open, setOpen] = useState<Record<string, boolean>>({});
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [page, setPage] = useState(0);
@@ -49,10 +49,10 @@ const CustomTable: React.FC<CustomTableProps> = ({ data }) => {
         const key = `${id}-${checkId}`;
         newState[key] = !newState[key];
       } else {
-        data
-          .find((entry) => entry.id === id)
-          ?.checks.forEach((_, index) => {
-            newState[`${id}-${index}`] = !newState[`${id}-${index}`];
+        checksData
+          .filter((check) => check.employeeId === id)
+          .forEach((check) => {
+            newState[`${id}-${check.id}`] = !newState[`${id}-${check.id}`];
           });
       }
       return newState;
@@ -64,9 +64,11 @@ const CustomTable: React.FC<CustomTableProps> = ({ data }) => {
     setSelected((prev) => {
       const newState = { ...prev };
       data.forEach((entry) => {
-        entry.checks.forEach((_, index) => {
-          newState[`${entry.id}-${index}`] = !allSelected;
-        });
+        checksData
+          .filter((check) => check.employeeId === entry.id)
+          .forEach((check) => {
+            newState[`${entry.id}-${check.id}`] = !allSelected;
+          });
       });
       return newState;
     });
@@ -112,7 +114,12 @@ const CustomTable: React.FC<CustomTableProps> = ({ data }) => {
       style={{ width: '100%', maxHeight: '600px' }}
     >
       <div style={{ maxWidth: '800px', overflowX: 'auto' }}>
-        <Table style={{ width: totalWidth > 700 ? totalWidth : '700px', minWidth: '700px' }}>
+        <Table
+          style={{
+            width: totalWidth > 700 ? totalWidth : '700px',
+            minWidth: '700px',
+          }}
+        >
           <TableHead>
             <TableRow>
               <TableCell
@@ -132,7 +139,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ data }) => {
                   onChange={toggleSelectAll}
                 />
               </TableCell>
-              <TableCell style={ {backgroundColor: '#fafafa'}}/>
+              <TableCell style={{ backgroundColor: '#fafafa' }} />
               <ResizableTableCell
                 width={columnWidths[1]}
                 onResize={(width) => handleResize(1, width)}
@@ -201,8 +208,8 @@ const CustomTable: React.FC<CustomTableProps> = ({ data }) => {
                     }}
                   >
                     <Checkbox
-                      checked={entry.checks.every(
-                        (_, index) => selected[`${entry.id}-${index}`],
+                      checked={entry.checksIds.every(
+                        (checkId) => selected[`${entry.id}-${checkId}`],
                       )}
                       onChange={() => toggleSelect(entry.id)}
                     />
@@ -277,30 +284,33 @@ const CustomTable: React.FC<CustomTableProps> = ({ data }) => {
                   </TableCell>
                 </TableRow>
                 {open[entry.id] &&
-                  entry.checks.map((check, index) => (
-                    <TableRow key={`${entry.id}-${index}`}>
-                      <TableCell padding='checkbox'>
-                        <Checkbox
-                          checked={selected[`${entry.id}-${index}`]}
-                          onChange={() =>
-                            toggleSelect(entry.id, index.toString())
-                          }
-                        />
-                      </TableCell>
-                      <TableCell/>
-                      <TableCell>{check.type}</TableCell>
-                      <TableCell>{check.code}</TableCell>
-                      <TableCell>{check.expiration}</TableCell>
-                      <TableCell>
-                        <StatusChip status={check.status} />
-                      </TableCell>
-                      {/* Empty cells for alignment */}
-                      <TableCell />
-                      <TableCell />
-                      <TableCell />
-                      <TableCell />
-                    </TableRow>
-                  ))}
+                  entry.checksIds.map((checkId) => {
+                    const check = checksData.find((ch) => ch.id === checkId);
+                    return (
+                      check && (
+                        <TableRow key={`${entry.id}-${check.id}`}>
+                          <TableCell padding='checkbox'>
+                            <Checkbox
+                              checked={selected[`${entry.id}-${check.id}`]}
+                              onChange={() => toggleSelect(entry.id, check.id)}
+                            />
+                          </TableCell>
+                          <TableCell />
+                          <TableCell>{check.type}</TableCell>
+                          <TableCell>{check.code}</TableCell>
+                          <TableCell>{check.expiration}</TableCell>
+                          <TableCell>
+                            <StatusChip status={check.status} />
+                          </TableCell>
+                          {/* Empty cells for alignment */}
+                          <TableCell />
+                          <TableCell />
+                          <TableCell />
+                          <TableCell />
+                        </TableRow>
+                      )
+                    );
+                  })}
               </React.Fragment>
             ))}
           </TableBody>
